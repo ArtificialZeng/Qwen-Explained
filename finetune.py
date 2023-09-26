@@ -9,22 +9,33 @@ import os
 from typing import Dict, Optional, List
 import torch
 from torch.utils.data import Dataset
+# 导入deepspeed库中的zero模块。DeepSpeed是一个深度学习优化库，zero是它的一个特性，可以减少模型的内存占用。
 from deepspeed import zero
+
+# 从deepspeed的zero模块中导入ZeroParamStatus。它与模型参数的分区有关，通常与zero优化有关。
 from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
+
+# 导入transformers库。transformers是一个提供大量预训练模型的库，例如BERT、GPT-2等。
 import transformers
+
+# 从transformers库中导入Trainer、GPTQConfig和deepspeed。Trainer是用于训练模型的类，GPTQConfig可能是针对某种GPT模型的配置，而deepspeed是与DeepSpeed集成相关的模块。
 from transformers import Trainer, GPTQConfig, deepspeed
+
+# 从transformers的trainer_pt_utils模块中导入LabelSmoother。LabelSmoother是一个用于标签平滑的工具，可以提高模型的泛化能力。
 from transformers.trainer_pt_utils import LabelSmoother
+
+# 从peft库中导入LoraConfig、get_peft_model和prepare_model_for_kbit_training。不过，到目前为止（2022年1月）我不熟悉peft这个库，所以具体的功能需要查阅相关文档。
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
-
+# 定义一个常量`IGNORE_TOKEN_ID`，其值等于LabelSmoother的ignore_index属性。这通常用于指定在计算损失时应该忽略的token ID。
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 
-
+# 使用Python的dataclass定义一个名为ModelArguments的类，它有一个属性model_name_or_path，默认值为"Qwen/Qwen-7B"。
 @dataclass
 class ModelArguments:
     model_name_or_path: Optional[str] = field(default="Qwen/Qwen-7B")
 
-
+# 使用dataclass定义一个名为DataArguments的类，用于指定数据相关的参数，如训练数据路径、评估数据路径和是否使用懒加载预处理。
 @dataclass
 class DataArguments:
     data_path: str = field(
@@ -35,7 +46,7 @@ class DataArguments:
     )
     lazy_preprocess: bool = False
 
-
+# 使用dataclass定义一个名为TrainingArguments的类，它继承了transformers的TrainingArguments类。这个类定义了训练相关的参数，如缓存目录、优化器、模型的最大序列长度和是否使用Lora。
 @dataclass
 class TrainingArguments(transformers.TrainingArguments):
     cache_dir: Optional[str] = field(default=None)
@@ -47,6 +58,7 @@ class TrainingArguments(transformers.TrainingArguments):
         },
     )
     use_lora: bool = False
+
 
 
 @dataclass
