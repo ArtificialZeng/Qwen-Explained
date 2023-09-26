@@ -2,13 +2,44 @@
 千问14B和7B的逐行解释
 
 
-* [fine-tune/](./fine-tune)
-  * [fine-tune.py/](.//fine-tune.py)
-    * class ModelArguments : const model_name_or_path
-    * class DataArguments : const data_path
-    * class TrainingArguments ： const cache_dir、const optim、const model_max_length、 const use_lora、
+* [finetune/](./finetune)
+  * [finetune.py/](./finetune.py)
+    * const IGNORE_TOKEN_ID
+    * class ModelArguments
+        * const model_name_or_path
+    * class DataArguments
+        * const data_path
+        * const eval_data_path
+        * const lazy_preprocess
+    * class TrainingArguments
+        * const cache_dir
+        * const optim
+        * const model_max_length
+        * const use_lora
+    * class LoraArguments    
+    * const lora_r
+        * const lora_alpha
+        * const lora_dropout
+        * const lora_target_modules
+        * const lora_weight_path
+        * const lora_bias
+        * const q_lora
+        * func maybe_zero_3
+        * func get_peft_state_maybe_zero_3
+        * const local_rank
+        * func rank0_print
+        * func safe_save_model_for_hf_trainer
+        * func preprocess
     * class SupervisedDataset
-  * func train 
+        * func __init__
+        * func __len__
+        * func __getitem__
+    * class LazySupervisedDataset
+        * func __init__
+        * func __len__
+        * func __getitem__
+        * func make_supervised_data_module
+        * func train
 * [web_demo.py/](./web_demo.py)
   * [ads_generation.md（分布式运行范例）](./examples/ads_generation.md)
 * [./Baichuan2-13B-Chat/modelling_baichuan.py](./Baichuan2-13B-Chat/modelling_baichuan.py)
